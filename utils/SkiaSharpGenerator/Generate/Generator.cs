@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using CppAst;
 
@@ -85,7 +86,10 @@ namespace SkiaSharpGenerator
 
 				writer.WriteLine();
 				writer.WriteLine($"\t// {del}");
-				writer.WriteLine($"\t[UnmanagedFunctionPointer (CallingConvention.Cdecl)]");
+				var convention = map?.CallingConvention == CallingConvention.StdCall
+					? "StdCall"
+					: "Cdecl";
+				writer.WriteLine($"\t[UnmanagedFunctionPointer (CallingConvention.{convention})]");
 
 				var paramsList = new List<string>();
 				for (var i = 0; i < function.Parameters.Count; i++)

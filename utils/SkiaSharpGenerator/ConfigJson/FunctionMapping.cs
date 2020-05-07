@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 
 namespace SkiaSharpGenerator
@@ -10,5 +11,9 @@ namespace SkiaSharpGenerator
 
 		[JsonPropertyName("parameters")]
 		public Dictionary<string, string> Parameters { get; set; } = new Dictionary<string, string>();
+
+		[JsonPropertyName("convention")]
+		[JsonConverter(typeof(CallingConventionConverter))]
+		public CallingConvention CallingConvention { get; set; } = CallingConvention.Cdecl;
 	}
 }

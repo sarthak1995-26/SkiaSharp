@@ -13,7 +13,6 @@ void RunTests(FilePath testAssembly, bool is32)
     var dir = testAssembly.GetDirectory();
     var settings = new XUnit2Settings {
         ReportName = "TestResults",
-        XmlReport = true,
         UseX86 = is32,
         NoAppDomain = true,
         Parallelism = ParallelismOption.All,
@@ -39,8 +38,6 @@ void RunNetCoreTests(FilePath testAssembly)
     var settings = new DotNetCoreTestSettings {
         Configuration = CONFIGURATION,
         NoBuild = true,
-        TestAdapterPath = ".",
-        Logger = "xunit",
         WorkingDirectory = dir,
         Verbosity = DotNetCoreVerbosity.Normal,
     };

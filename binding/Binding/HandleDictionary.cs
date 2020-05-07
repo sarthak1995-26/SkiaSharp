@@ -27,6 +27,11 @@ namespace SkiaSharp
 				return false;
 			}
 
+			if (typeof (TSkiaObject) is ISKSkipRegistration) {
+				instance = null;
+				return false;
+			}
+
 			instancesLock.EnterReadLock ();
 			try {
 				return GetInstanceNoLocks (handle, out instance);
@@ -44,6 +49,9 @@ namespace SkiaSharp
 		{
 			if (handle == IntPtr.Zero)
 				return null;
+
+			if (typeof (TSkiaObject) is ISKSkipRegistration)
+				return objectFactory.Invoke (handle, owns);
 
 			instancesLock.EnterUpgradeableReadLock ();
 			try {
@@ -111,6 +119,9 @@ namespace SkiaSharp
 			if (handle == IntPtr.Zero || instance == null)
 				return;
 
+			if (instance is ISKSkipRegistration)
+				return;
+
 			SKObject objectToDispose = null;
 
 			instancesLock.EnterWriteLock ();
@@ -144,6 +155,9 @@ namespace SkiaSharp
 		internal static void DeregisterHandle (IntPtr handle, SKObject instance)
 		{
 			if (handle == IntPtr.Zero)
+				return;
+
+			if (instance is ISKSkipRegistration)
 				return;
 
 			instancesLock.EnterWriteLock ();

@@ -66,7 +66,12 @@ namespace SkiaSharp
 			if (backendContext == null)
 				throw new ArgumentNullException (nameof (backendContext));
 
-			return GetObject<GRContext> (SkiaApi.gr_context_make_vulkan (backendContext.Handle));
+			var native = GRVkBackendContextNative.FromManaged (ref backendContext, out var gch, out var ctx);
+			try {
+				return GetObject (SkiaApi.gr_context_make_vulkan (native, (void*)ctx));
+			} finally {
+				gch.Free ();
+			}
 		}
 
 		//
